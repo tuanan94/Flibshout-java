@@ -1,5 +1,3 @@
-package com.gmail.kunicins.olegs.libshout;
-
 import java.io.IOException;
 
 public class Libshout implements AutoCloseable {
