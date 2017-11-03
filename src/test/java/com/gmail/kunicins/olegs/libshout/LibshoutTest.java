@@ -1,14 +1,15 @@
-package com.gmail.kunicins.olegs.libshout;
+package com.an.flibshout;
 
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class LibshoutTest {
-	private Libshout libshout = null; 
+	private Libshout libshout = null;
 	
 	@Before
 	public void setUp() throws IOException {
