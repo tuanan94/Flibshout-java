@@ -1,11 +1,10 @@
 package com.an;
 
 import com.gmail.kunicins.olegs.libshout.Libshout;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
@@ -19,7 +18,6 @@ public class Controller {
     private static Libshout icecast = null;
     static ArrayList<File> files = new ArrayList<File>();
 
-
     public static void main(String[] args) throws IOException, IOException {
         setInput();
         initIcecastConnection();
@@ -27,19 +25,46 @@ public class Controller {
         collectThread.start();
         while (true){
             if (files.isEmpty()){
-                System.out.println("files list is empty. Wait...");
-                try {
-                    sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
+                System.out.println("files list is empty. Will play noisy sound");
+                playNoisySound();
             }
             File f = files.get(0);
             send_output(f, icecast);
+            deleteFile(f);
         }
        // icecast.close();
     }
+    private static void deleteFile(File f){
+        try {
+            FileUtils.forceDelete(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        files.remove(f);
+    }
+
+    private static void playNoisySound() throws IOException {
+        System.out.println("[Noise] [Start]");
+        byte[] buffer = new byte[1024];
+        File f = new File("mp3default/default-noisy.mp3");
+        InputStream mp3 = new BufferedInputStream(new FileInputStream(f));
+        int read = mp3.read(buffer);
+        int count = 0;
+        // Keep playing this sound while mp3tank is empty
+        while (read > 0 && files.isEmpty()) {
+            count ++;
+            icecast.send(buffer, read);
+            read = mp3.read(buffer);
+            if (count % 50 == 0){
+                System.out.println("[Noise] [Processing] f = " + f + " ." + count);
+            }
+        }
+        mp3.close();
+        System.out.println("[Noise] [End]");
+
+    }
+
+
     private static class CollectThread extends Thread{
         @Override
         public void run() {
