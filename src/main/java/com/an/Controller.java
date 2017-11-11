@@ -17,6 +17,7 @@ public class Controller {
     static ArrayList<File> files = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
+        checkComponent();
         setInput();
         initIcecastConnection();
         CollectThread collectThread = new CollectThread();
