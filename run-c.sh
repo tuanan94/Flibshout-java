@@ -1,3 +1,1 @@
-cd src/main/java/
-javac Controller.java
-java Controller
+java -cp classes/artifacts/libshout_java_jar/libshout-java.jar com.an.Controller
