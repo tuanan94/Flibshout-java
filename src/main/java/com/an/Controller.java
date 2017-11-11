@@ -7,8 +7,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static java.lang.Thread.sleep;
-
 public class Controller {
     private static String mp3TankFolder = null;
     private static String hostUrl = "fradio.site";
@@ -16,23 +14,16 @@ public class Controller {
     private static String password = null;
     private static String mountUrl = "/abc";
     private static Libshout icecast = null;
-    static ArrayList<File> files = new ArrayList<File>();
+    static ArrayList<File> files = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException, IOException {
+    public static void main(String[] args) throws IOException {
         setInput();
         initIcecastConnection();
         CollectThread collectThread = new CollectThread();
         collectThread.start();
-        while (true){
-            if (files.isEmpty()){
-                System.out.println("files list is empty. Will play noisy sound");
-                playNoisySound();
-            }
-            File f = files.get(0);
-            send_output(f, icecast);
-            deleteFile(f);
-        }
-       // icecast.close();
+        StreamingThread streamingThread  = new StreamingThread();
+        streamingThread.start();
+       // icecast.close(); ** Hope that it will never close **
     }
     private static void deleteFile(File f){
         try {
@@ -97,6 +88,29 @@ public class Controller {
                     e.printStackTrace();
                 }
 
+            }
+        }
+    }
+
+    private static class StreamingThread extends Thread{
+        @Override
+        public void run() {
+            while (true){
+                if (files.isEmpty()){
+                    System.out.println("files list is empty. Will play noisy sound");
+                    try {
+                        playNoisySound();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                File f = files.get(0);
+                try {
+                    send_output(f, icecast);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                deleteFile(f);
             }
         }
     }
