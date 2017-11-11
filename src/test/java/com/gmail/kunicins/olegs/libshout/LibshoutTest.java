@@ -1,4 +1,4 @@
-package com.an.flibshout;
+package com.gmail.kunicins.olegs.libshout;
 
 import static org.junit.Assert.*;
 
