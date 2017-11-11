@@ -25,6 +25,10 @@ public class Controller {
         streamingThread.start();
        // icecast.close(); ** Hope that it will never close **
     }
+    private static void checkComponent(){
+        System.out.println("Checking common-io" + FileUtils.class);
+    }
+
     private static void deleteFile(File f){
         try {
             FileUtils.forceDelete(f);
