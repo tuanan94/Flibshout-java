@@ -108,6 +108,7 @@ public class Controller {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    continue;
                 }
                 File f = files.get(0);
                 try {
